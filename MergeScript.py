@@ -1,0 +1,25 @@
+import pandas as pd
+import numpy as np
+import os
+
+#Read the CSV, which contains the Number of Beds and Infected
+bedsAndInfected=pd.read_csv("./data/intensivData/bedsAndInfected.csv", parse_dates=["date"],dayfirst=True)
+
+#the attribute "date" is in datetime. I want to merge the data based on the date in the attribute "date"
+bedsAndInfected['just_date']=pd.to_datetime(bedsAndInfected['date'], errors="ignore", utc=True).dt.date
+bedsAndInfected=bedsAndInfected.drop(columns=['date'])
+
+#parse the rki dataset
+covid19 = pd.read_csv("./data/rki_covid19_19_10_2020.csv", parse_dates=["Meldedatum", "Refdatum"], dayfirst=True, index_col="ObjectId")
+
+#do the same transformation from datetime to date with "refdatum" and call the new attribute just_date
+covid19['just_date']=pd.to_datetime(covid19['Refdatum'], errors="ignore", utc=True).dt.date
+
+#merge the data, where just_date is the same and the IdBundesland
+#I used "left" so that to the rki data the correct data from bedsAndInfected will be added
+covid19=pd.merge(covid19, bedsAndInfected, how='left', on=['just_date','IdBundesland'])
+covid19=covid19.drop(columns=['just_date'])
+print(covid19.head())
+
+
+covid19.to_csv(r'./data/intensivData/newRKI.csv', index= False, header=True)
