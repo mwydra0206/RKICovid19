@@ -17,6 +17,6 @@ for i in range(1,17):
         df=df.append(covid19, ignore_index=True)
     print(df.head())
 
-df=df.rename(columns={"Belegte Betten": "BelegteBetten", "Freie Betten": "FreieBetten", "COVID-19-Fälle": "COVID-19-Faelle"})
 
+df=df.rename(columns={"Belegte Betten": "BelegteBetten", "Freie Betten": "FreieBetten", "COVID-19-Fälle": "COVID-19-Faelle"})
 df.to_csv(r'./data/intensivData/bedsAndInfected.csv', index= False, header=True)

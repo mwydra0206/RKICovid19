@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 date,BelegteBetten,FreieBetten,Notfallreserve,COVID-19-Faelle,IdBundesland
+=======
+date,Belegte Betten,Freie Betten,Notfallreserve,COVID-19-Fälle,IdBundesland
+>>>>>>> ea15ed42ab7e376f176f7214c31b329ec4516d93
 2020-12-01T12:15:00+01:00,606,250,429,28,1
 2020-11-30T12:15:00+01:00,587,269,432,26,1
 2020-11-29T12:15:00+01:00,565,282,432,24,1
