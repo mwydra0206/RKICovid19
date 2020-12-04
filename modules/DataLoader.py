@@ -7,15 +7,17 @@ import pandas as pd
 import numpy as np
 import os
 
-def load_covid19():
+def load_covid19(intensivBedData=False):
     """
     Standard loader of the covid19 Dataset.
 
     returning correct loaded covid19 dataframe.
     """
-
     # Importing with standard date formats
-    covid19 = pd.read_csv("./data/rki_covid19_19_10_2020.csv", parse_dates=["Meldedatum", "Refdatum"], dayfirst=True, index_col="ObjectId")
+    if intensivBedData:
+        covid19 = pd.read_csv("./data/intensivData/newRKi.csv", parse_dates=["Meldedatum", "Refdatum"], dayfirst=False)
+    else:
+        covid19 = pd.read_csv("./data/rki_covid19_19_10_2020.csv", parse_dates=["Meldedatum", "Refdatum"], dayfirst=False, index_col="ObjectId")
 
     # Parsing own non-standard date format
     covid19["Datenstand"] = pd.to_datetime(covid19["Datenstand"], format="%d.%m.%Y, %H:%M Uhr", errors="ignore")
@@ -23,22 +25,31 @@ def load_covid19():
     # return DataFrame
     return covid19
 
-def load_covid19_for_deathcase(features = None, label = "Deathcase", age_codes = None, cleaned=False):
+def load_covid19_for_deathcase(features = None, label = "Deathcase", age_codes = None, cleaned=False, intensivBedData=False):
     """
     Loader of the covid19 dataset for the deathcase classification.
     """
 
-    covid19 = load_covid19()
+    covid19 = load_covid19(intensivBedData)
 
     # Build up deathcases
     # -9 are the deathcase in the dataset
     covid19[label] = covid19["NeuerTodesfall"] != -9 
+
+    covid19 = covid19[covid19.AnzahlFall == 1]
 
     if features is None:
          # Select needed features
         features = ["Bundesland", "Landkreis", "Altersgruppe", "Geschlecht", "Meldedatum", label]
     
     covid19 = covid19[features]
+
+    if intensivBedData:
+        covid19["FreeBedPercentage"] = covid19["FreieBetten"]  / (covid19["FreieBetten"] + covid19["BelegteBetten"]) 
+        features.insert(-1, "FreeBedPercentage")
+
+        covid19["FullBedCovidPercentage"] = covid19["COVID-19-Faelle"] / covid19["BelegteBetten"]
+        features.insert(-1, "FullBedCovidPercentage")
 
     # make ordinal feature
     if age_codes is None:
