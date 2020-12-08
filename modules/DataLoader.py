@@ -7,15 +7,22 @@ import pandas as pd
 import numpy as np
 import os
 
-def load_covid19(intensivBedData=False):
+def load_covid19(intensivBedData=False, decData=False):
     """
     Standard loader of the covid19 Dataset.
 
     returning correct loaded covid19 dataframe.
     """
+
+    
     # Importing with standard date formats
     if intensivBedData:
-        covid19 = pd.read_csv("./data/intensivData/newRKi.csv", parse_dates=["Meldedatum", "Refdatum"], dayfirst=False)
+        if decData:
+            covid19 = pd.read_csv("./data/intensivData/newRKI1.csv", parse_dates=["Meldedatum", "Refdatum"], dayfirst=False)
+
+        else:
+            covid19 = pd.read_csv("./data/intensivData/newRKI0.csv", parse_dates=["Meldedatum", "Refdatum"], dayfirst=False)
+            
     else:
         covid19 = pd.read_csv("./data/rki_covid19_19_10_2020.csv", parse_dates=["Meldedatum", "Refdatum"], dayfirst=False, index_col="ObjectId")
 
