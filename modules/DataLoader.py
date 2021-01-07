@@ -32,12 +32,12 @@ def load_covid19(intensivBedData=False, decData=False):
     # return DataFrame
     return covid19
 
-def load_covid19_for_deathcase(features = None, label = "Deathcase", age_codes = None, cleaned=False, intensivBedData=False):
+def load_covid19_for_deathcase(features = None, label = "Deathcase", age_codes = None, cleaned=False, intensivBedData=False, decData=False):
     """
     Loader of the covid19 dataset for the deathcase classification.
     """
 
-    covid19 = load_covid19(intensivBedData)
+    covid19 = load_covid19(intensivBedData, decData)
 
     # Build up deathcases
     # -9 are the deathcase in the dataset

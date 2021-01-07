@@ -1,3 +1,7 @@
+'''
+Prototype for running the last created model
+'''
+
 import pickle
 import pandas as pd
 
